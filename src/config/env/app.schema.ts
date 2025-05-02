@@ -7,5 +7,3 @@ export const appSchema = z.object({
   API_PREFIX: z.string().optional(),
   WORKING_DIRECTORY: z.string().optional(),
 });
-
-export type AppConfig = z.infer<typeof appSchema>;
