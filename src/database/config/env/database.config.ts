@@ -1,6 +1,6 @@
 import { registerAs } from '@nestjs/config';
-import { tryParseEnv } from 'src/config';
 import { databaseSchema } from './database.schema';
+import { tryParseEnv } from 'src/utils/try-parse-env';
 
 export const databaseConfig = registerAs('database', () => {
   const env = tryParseEnv(databaseSchema);
