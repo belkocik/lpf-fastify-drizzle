@@ -10,5 +10,7 @@ export const appConfig = registerAs('app', () => {
     workingDirectory: env.WORKING_DIRECTORY || process.cwd(),
     port: env.APP_PORT ?? 3000,
     apiPrefix: env.API_PREFIX ?? 'api',
+    fallbackLanguage: env.APP_FALLBACK_LANGUAGE || 'en',
+    headerLanguage: env.APP_HEADER_LANGUAGE || 'x-custom-lang',
   };
 });

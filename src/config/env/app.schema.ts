@@ -6,4 +6,6 @@ export const appSchema = z.object({
   APP_PORT: z.coerce.number().min(0).max(65535).optional(),
   API_PREFIX: z.string().optional(),
   WORKING_DIRECTORY: z.string().optional(),
+  APP_FALLBACK_LANGUAGE: z.string().optional(),
+  APP_HEADER_LANGUAGE: z.string().optional(),
 });

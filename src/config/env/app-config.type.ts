@@ -4,4 +4,6 @@ export type AppConfig = {
   workingDirectory: string;
   port: number;
   apiPrefix: string;
+  fallbackLanguage: string;
+  headerLanguage: string;
 };

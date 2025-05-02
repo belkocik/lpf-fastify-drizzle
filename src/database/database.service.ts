@@ -11,30 +11,41 @@ import { ConfigService } from '@nestjs/config';
 import * as schema from './schema';
 import { AllConfigType } from 'src/config';
 
+// Typowany konstruktor
+type DrizzleFn = typeof drizzle<typeof schema>;
+const Drizzle = drizzle as unknown as {
+  new (...args: Parameters<DrizzleFn>): ReturnType<DrizzleFn>;
+};
+
 @Injectable()
-export class DatabaseService implements OnModuleInit, OnModuleDestroy {
+export class DatabaseService
+  extends Drizzle
+  implements OnModuleInit, OnModuleDestroy
+{
+  private readonly logger = new Logger(DatabaseService.name);
   private client: ReturnType<typeof postgres>;
   private migrationClient: ReturnType<typeof postgres>;
-  private readonly logger = new Logger(DatabaseService.name);
-  public db: ReturnType<typeof drizzle>;
 
   constructor(private configService: ConfigService<AllConfigType>) {
     const dbUrl = configService.getOrThrow('database.url', { infer: true });
-    this.client = postgres(dbUrl);
-    this.migrationClient = postgres(dbUrl, { max: 1 });
 
-    this.db = this.createDrizzleInstance(this.client);
-  }
+    const client = postgres(dbUrl);
+    const migrationClient = postgres(dbUrl, { max: 1 });
 
-  private createDrizzleInstance(client: ReturnType<typeof postgres>) {
-    return drizzle(client, { schema, logger: true });
+    super(client, { schema, logger: true });
+
+    this.client = client;
+    this.migrationClient = migrationClient;
+
+    // Upewniamy się, że dziedziczenie prototypu działa poprawnie
+    Object.setPrototypeOf(Object.getPrototypeOf(this), Drizzle.prototype);
   }
 
   async onModuleInit() {
     this.logger.log('Starting database migrations');
 
     try {
-      const migrator = this.createDrizzleInstance(this.migrationClient);
+      const migrator = drizzle(this.migrationClient, { schema, logger: true });
       await migrate(migrator, {
         migrationsFolder: './src/database/migrations',
         migrationsSchema: 'public',
@@ -52,6 +63,6 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy() {
-    await Promise.all([this.migrationClient.end(), this.client.end()]);
+    await Promise.all([this.client.end(), this.migrationClient.end()]);
   }
 }
