@@ -5,24 +5,22 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { AuthDto } from './dto';
-// import { DrizzleService } from 'src/modules/drizzle/drizzle.service';
-// import { user } from 'src/modules/drizzle/schema';
 import * as bcrypt from 'bcrypt';
 import { and, eq, isNotNull } from 'drizzle-orm';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
-// import { I18nService } from 'nestjs-i18n';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from 'src/database/database.service';
 import { user } from 'src/database/schema';
 import { AllConfigType } from 'src/config';
+import { TypedI18nService } from 'src/i18n/typed-i18n.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly databaseService: DatabaseService,
-    // private readonly i18n: I18nService,
+    private readonly i18n: TypedI18nService,
     private readonly configService: ConfigService<AllConfigType>,
   ) {}
 
@@ -44,12 +42,10 @@ export class AuthService {
     } catch (error) {
       console.log('🚀 ~ AuthService ~ signupLocal ~ error:', error);
       if (error.code === '23505') {
-        // throw new ConflictException(this.i18n.t('auth.emailAlreadyExists'));
-        console.log('Email already exists');
+        throw new ConflictException(this.i18n.t('auth.emailAlreadyExists'));
       }
       throw new BadRequestException(
-        // this.i18n.t('auth.errorDuringCreatingUser'),
-        console.log('Error during creating user'),
+        this.i18n.t('auth.errorDuringCreatingUser'),
       );
     }
   }
@@ -59,16 +55,14 @@ export class AuthService {
       where: eq(user.email, dto.email),
     });
     if (!userInDb)
-      // throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
 
     const passwordMatches = await bcrypt.compare(
       dto.password,
       userInDb.password,
     );
     if (!passwordMatches)
-      // throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
 
     const tokens = await this.getTokens(userInDb.id, userInDb.email);
     await this.updateRtHash(userInDb.id, tokens.refreshToken);
@@ -86,16 +80,14 @@ export class AuthService {
       where: eq(user.id, userId),
     });
     if (!userInDb || !userInDb.hashedRefreshToken)
-      // throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
 
     const refreshTokenMatches = await bcrypt.compare(
       refreshToken,
       userInDb.hashedRefreshToken,
     );
     if (!refreshTokenMatches)
-      // throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException(this.i18n.t('auth.accessDenied'));
 
     const tokens = await this.getTokens(userInDb.id, userInDb.email);
     await this.updateRtHash(userInDb.id, tokens.refreshToken);

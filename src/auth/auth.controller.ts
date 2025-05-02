@@ -7,13 +7,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-// import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+
 import { AuthenticatedRequest, AuthenticatedRequestRt, Tokens } from './types';
 import { Public } from 'src/common/decorators';
 import { RtGuard } from 'src/common/guards';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
+import { AuthDto } from './dto';
 
 @Controller('auth')
 export class AuthController {
