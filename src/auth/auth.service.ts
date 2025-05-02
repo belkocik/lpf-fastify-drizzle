@@ -29,7 +29,7 @@ export class AuthService {
   async signupLocal(dto: AuthDto): Promise<Tokens> {
     try {
       const hashedPassword = await this.hashData(dto.password);
-      const [newUser] = await this.databaseService
+      const [newUser] = await this.databaseService.db
         .insert(user)
         .values({
           email: dto.email,
@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   async signinLocal(dto: AuthDto): Promise<Tokens> {
-    const userInDb = await this.databaseService.query.user.findFirst({
+    const userInDb = await this.databaseService.db.query.user.findFirst({
       where: eq(user.email, dto.email),
     });
     if (!userInDb)
@@ -76,13 +76,13 @@ export class AuthService {
     return tokens;
   }
   async logout(userId: number) {
-    await this.databaseService
+    await this.databaseService.db
       .update(user)
       .set({ hashedRefreshToken: null })
       .where(and(eq(user.id, userId), isNotNull(user.hashedRefreshToken)));
   }
   async refreshTokens(userId: number, refreshToken: string) {
-    const userInDb = await this.databaseService.query.user.findFirst({
+    const userInDb = await this.databaseService.db.query.user.findFirst({
       where: eq(user.id, userId),
     });
     if (!userInDb || !userInDb.hashedRefreshToken)
@@ -142,7 +142,7 @@ export class AuthService {
 
   async updateRtHash(userId: number, rt: string) {
     const hash = await this.hashData(rt);
-    await this.databaseService
+    await this.databaseService.db
       .update(user)
       .set({ hashedRefreshToken: hash })
       .where(eq(user.id, userId));

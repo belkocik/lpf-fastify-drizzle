@@ -7,7 +7,7 @@ import { user } from 'src/database/schema';
 export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
   async findOneWithEmail(email: string) {
-    return await this.databaseService.query.user.findFirst({
+    return await this.databaseService.db.query.user.findFirst({
       where: eq(user.email, email),
     });
   }
