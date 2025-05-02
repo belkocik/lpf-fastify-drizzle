@@ -9,6 +9,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { authConfig } from './auth/config/env';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { authConfig } from './auth/config/env';
     }),
     DatabaseModule,
     AuthModule,
+    UsersModule,
     ThrottlerModule.forRoot({
       throttlers: [
         {
