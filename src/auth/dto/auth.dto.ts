@@ -12,4 +12,4 @@ export const AuthSchema = z.object({
     .max(32, tk('validation.password.maxLength')),
 });
 
-export class AuthDto extends createZodDto(AuthSchema) {}
+export class AuthRequestDto extends createZodDto(AuthSchema) {}

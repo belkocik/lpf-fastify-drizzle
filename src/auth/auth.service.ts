@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { AuthDto } from './dto';
+import { AuthRequestDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { and, eq, isNotNull } from 'drizzle-orm';
 import { JwtService } from '@nestjs/jwt';
@@ -9,7 +9,7 @@ import { user } from 'src/database/schema';
 import { AllConfigType } from 'src/config';
 import { TypedI18nService } from 'src/i18n/typed-i18n.service';
 import { AuthErrorHandlerService } from './auth-error-handler.service';
-import { Tokens } from './dto/tokens.dto';
+import { TokensResponseDto } from './dto/tokens.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
     private readonly authErrorHandler: AuthErrorHandlerService,
   ) {}
 
-  async signupLocal(dto: AuthDto): Promise<Tokens> {
+  async signupLocal(dto: AuthRequestDto): Promise<TokensResponseDto> {
     try {
       const hashedPassword = await this.hashData(dto.password);
       const [newUser] = await this.databaseService.db
@@ -41,7 +41,7 @@ export class AuthService {
     }
   }
 
-  async signinLocal(dto: AuthDto): Promise<Tokens> {
+  async signinLocal(dto: AuthRequestDto): Promise<TokensResponseDto> {
     const userInDb = await this.databaseService.db.query.user.findFirst({
       where: eq(user.email, dto.email),
     });
@@ -91,7 +91,7 @@ export class AuthService {
     return bcrypt.hash(data, 10);
   }
 
-  async getTokens(userId: number, email: string): Promise<Tokens> {
+  async getTokens(userId: number, email: string): Promise<TokensResponseDto> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {

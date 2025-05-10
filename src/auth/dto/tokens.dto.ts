@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class Tokens {
+export class TokensResponseDto {
   @ApiProperty({
     description: 'The access token',
     example:
