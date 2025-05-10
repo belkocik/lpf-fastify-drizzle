@@ -59,11 +59,13 @@ import { ErrorHandlerService } from './common/services/error-handler.service';
         {
           use: HeaderResolver,
           useFactory: (configService: ConfigService<AllConfigType>) => {
-            return [
-              configService.get('app.headerLanguage', {
+            const headerLanguage = configService.getOrThrow(
+              'app.headerLanguage',
+              {
                 infer: true,
-              }),
-            ];
+              },
+            );
+            return [headerLanguage];
           },
           inject: [ConfigService],
         },
