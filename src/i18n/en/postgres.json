@@ -1,0 +1,9 @@
+{
+  "uniqueViolation": "The value already exists. Please use a different value.",
+  "foreignKeyViolation": "Foreign key violation. The related record might not exist.",
+  "notNullViolation": "This field cannot be empty. Please provide a value.",
+  "checkViolation": "A constraint violation occurred.",
+  "databaseError": "An error occurred while interacting with the database.",
+  "generalError": "An unexpected error occurred. Please try again later.",
+  "unknownError": "An unknown database error occurred."
+}

@@ -1,0 +1,9 @@
+{
+  "uniqueViolation": "Wartość już istnieje. Proszę użyć innej wartości.",
+  "foreignKeyViolation": "Naruszenie klucza obcego. Powiązany rekord może nie istnieć.",
+  "notNullViolation": "To pole nie może być puste. Proszę podać wartość.",
+  "checkViolation": "Wystąpił błąd ograniczenia.",
+  "databaseError": "Wystąpił błąd podczas interakcji z bazą danych.",
+  "generalError": "Wystąpił nieoczekiwany błąd. Proszę spróbować ponownie później.",
+  "unknownError": "Wystąpił nieznany błąd bazy danych."
+}

@@ -14,6 +14,7 @@ import * as path from 'path';
 import { HeaderResolver, I18nModule } from 'nestjs-i18n';
 import { I18nExtrasModule } from './i18n/typed-i18n.module';
 import { ZodI18nValidationPipe } from './pipes/zod-i18n-validation.pipe';
+import { ErrorHandlerService } from './common/services/error-handler.service';
 
 @Module({
   imports: [
@@ -46,7 +47,7 @@ import { ZodI18nValidationPipe } from './pipes/zod-i18n-validation.pipe';
           infer: true,
         }),
         loaderOptions: {
-          path: path.join(__dirname, '..', '/i18n/'),
+          path: path.join(__dirname, 'i18n'),
           watch: true,
         },
         typesOutputPath: path.join(
@@ -74,6 +75,7 @@ import { ZodI18nValidationPipe } from './pipes/zod-i18n-validation.pipe';
   controllers: [AppController],
   providers: [
     AppService,
+    ErrorHandlerService,
     {
       provide: APP_PIPE,
       useClass: ZodI18nValidationPipe,
@@ -83,5 +85,6 @@ import { ZodI18nValidationPipe } from './pipes/zod-i18n-validation.pipe';
       useClass: ThrottlerGuard,
     },
   ],
+  exports: [ErrorHandlerService],
 })
 export class AppModule {}

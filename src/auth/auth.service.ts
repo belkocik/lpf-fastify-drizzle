@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { AuthDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { and, eq, isNotNull } from 'drizzle-orm';
@@ -14,6 +9,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { user } from 'src/database/schema';
 import { AllConfigType } from 'src/config';
 import { TypedI18nService } from 'src/i18n/typed-i18n.service';
+import { AuthErrorHandlerService } from './auth-error-handler.service';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +18,7 @@ export class AuthService {
     private readonly databaseService: DatabaseService,
     private readonly i18n: TypedI18nService,
     private readonly configService: ConfigService<AllConfigType>,
+    private readonly authErrorHandler: AuthErrorHandlerService,
   ) {}
 
   async signupLocal(dto: AuthDto): Promise<Tokens> {
@@ -40,13 +37,7 @@ export class AuthService {
 
       return tokens;
     } catch (error) {
-      console.log('🚀 ~ AuthService ~ signupLocal ~ error:', error);
-      if (error.code === '23505') {
-        throw new ConflictException(this.i18n.t('auth.emailAlreadyExists'));
-      }
-      throw new BadRequestException(
-        this.i18n.t('auth.errorDuringCreatingUser'),
-      );
+      this.authErrorHandler.handleAuthError(error);
     }
   }
 
