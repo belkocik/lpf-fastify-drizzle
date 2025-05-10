@@ -8,18 +8,24 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { AuthenticatedRequest, AuthenticatedRequestRt, Tokens } from './types';
+import { AuthenticatedRequest, AuthenticatedRequestRt } from './types';
 import { Public } from 'src/common/decorators';
 import { RtGuard } from 'src/common/guards';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
+import { ApiCreatedResponse } from '@nestjs/swagger';
+import { Tokens } from './dto/tokens.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @ApiCreatedResponse({
+    description: 'User created successfully',
+    type: Tokens,
+  })
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
   signupLocal(@Body() dto: AuthDto): Promise<Tokens> {

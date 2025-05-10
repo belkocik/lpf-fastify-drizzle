@@ -2,7 +2,6 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { AuthDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { and, eq, isNotNull } from 'drizzle-orm';
-import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from 'src/database/database.service';
@@ -10,6 +9,7 @@ import { user } from 'src/database/schema';
 import { AllConfigType } from 'src/config';
 import { TypedI18nService } from 'src/i18n/typed-i18n.service';
 import { AuthErrorHandlerService } from './auth-error-handler.service';
+import { Tokens } from './dto/tokens.dto';
 
 @Injectable()
 export class AuthService {
