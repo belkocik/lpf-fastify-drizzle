@@ -1,0 +1,15 @@
+{
+  "type": {
+    "string": "String value is required",
+    "number": "Number value is required",
+    "boolean": "Boolean value is required"
+  },
+  "email": {
+    "invalid": "Invalid email format"
+  },
+  "password": {
+    "required": "Password is required",
+    "minLength": "Password must be at least 8 characters long",
+    "maxLength": "Password cannot exceed 32 characters"
+  }
+}

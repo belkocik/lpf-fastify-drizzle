@@ -6,14 +6,14 @@ import { AllConfigType, appConfig } from './config';
 import { databaseConfig } from './database/config';
 import { DatabaseModule } from './database/database.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { authConfig } from './auth/config/env';
 import { UsersModule } from './users/users.module';
 import * as path from 'path';
-import { HeaderResolver, I18nModule, I18nService } from 'nestjs-i18n';
-import { TypedI18nService } from './i18n/typed-i18n.service';
+import { HeaderResolver, I18nModule } from 'nestjs-i18n';
 import { I18nExtrasModule } from './i18n/typed-i18n.module';
+import { ZodI18nValidationPipe } from './pipes/zod-i18n-validation.pipe';
 
 @Module({
   imports: [
@@ -74,6 +74,10 @@ import { I18nExtrasModule } from './i18n/typed-i18n.module';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ZodI18nValidationPipe,
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

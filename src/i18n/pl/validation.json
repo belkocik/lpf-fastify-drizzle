@@ -1,0 +1,15 @@
+{
+  "type": {
+    "string": "Wymagana jest wartość tekstowa",
+    "number": "Wymagana jest wartość liczbowo",
+    "boolean": "Wymagana jest wartość logiczna"
+  },
+  "email": {
+    "invalid": "Nieprawidłowy format email"
+  },
+  "password": {
+    "required": "Hasło jest wymagane",
+    "minLength": "Hasło musi mieć co najmniej 8 znaków",
+    "maxLength": "Hasło nie może przekraczać 32 znaków"
+  }
+}

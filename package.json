@@ -33,6 +33,7 @@
     "drizzle-orm": "^0.43.1",
     "fastify": "^5.3.2",
     "nestjs-i18n": "^10.5.1",
+    "nestjs-zod": "^4.3.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "postgres": "^3.4.5",
